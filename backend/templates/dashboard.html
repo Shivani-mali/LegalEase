@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalEase - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Vend+Sans:ital,wght@0,300..700;1,300..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-small">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo"
+                        style="height: 24px; width: auto; border-radius: 4px;">
+                    <span>LegalEase</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#home" class="menu-item active" data-section="home">
+                    <i data-lucide="layout-dashboard" class="icon"></i> Dashboard
+                </a>
+                <a href="#ask-legal" class="menu-item" data-section="ask-legal">
+                    <i data-lucide="message-square" class="icon"></i> Ask Legal Question
+                </a>
+                <a href="#laws" class="menu-item" data-section="laws">
+                    <i data-lucide="book-open" class="icon"></i> Explore Laws
+                </a>
+                <a href="#documents" class="menu-item" data-section="documents">
+                    <i data-lucide="file-text" class="icon"></i> Generate Documents
+                </a>
+                <a href="#settings" class="menu-item" data-section="settings">
+                    <i data-lucide="settings" class="icon"></i> Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn btn-logout" id="logoutBtn">Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h2 id="pageTitle">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="user-profile">
+                        <span class="username" id="username">{{ username }}</span>
+                        <div class="avatar"><i data-lucide="user"></i></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="content-wrapper">
+                <!-- Home Section -->
+                <section id="home-section" class="content-section active">
+                    <div class="welcome-section">
+                        <h1 style="display: flex; align-items: center; gap: 8px;">Welcome to LegalEase! <i
+                                data-lucide="sparkles" style="width: 28px; height: 28px; color: #f59e0b;"></i></h1>
+                        <div class="search-bar-container">
+                            <input type="text" class="search-bar" id="legalSearchBar"
+                                placeholder="Search legal questions..." onkeypress="handleSearchKeypress(event)">
+                            <button class="search-btn" onclick="performSearch()"><i data-lucide="search"
+                                    style="color: white; width: 20px; height: 20px;"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="action-card" onclick="switchSection('laws')">
+                            <i data-lucide="book-open" class="action-icon" style="width: 40px; height: 40px;"></i>
+                            <h3>Explore Laws</h3>
+                            <p>Browse Indian laws and regulations</p>
+                        </div>
+
+                        <div class="action-card" onclick="switchSection('documents')">
+                            <i data-lucide="file-text" class="action-icon" style="width: 40px; height: 40px;"></i>
+                            <h3>Generate Documents</h3>
+                            <p>Create legal documents automatically</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Ask Legal Question Section -->
+                <section id="ask-legal-section" class="content-section">
+                    <div class="section-header">
+                        <p>Ask your legal question in simple language</p>
+                    </div>
+
+                    <div class="question-container">
+                        <div class="form-group">
+                            <label for="legalQuestion">Your Question</label>
+                            <textarea id="legalQuestion"
+                                placeholder="e.g., What are my rights if my salary is not paid?" rows="5"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="language">Select Language</label>
+                            <select id="language">
+                                <option value="en">English</option>
+                                <option value="hi">हिंदी (Hindi)</option>
+                                <option value="mr">मराठी (Marathi)</option>
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary" id="askBtn" onclick="askLegalQuestion()">Get Answer</button>
+                    </div>
+
+                    <div class="answer-container" id="answerContainer" style="display: none;">
+                        <div class="answer-header">
+                            <h3>Answer</h3>
+                            <button class="btn-close" onclick="clearAnswer()">✕</button>
+                        </div>
+                        <div class="answer-content" id="answerContent"></div>
+                        <div class="answer-footer">
+                            <button class="btn btn-secondary" onclick="downloadAnswer()"
+                                style="display:inline-flex; align-items:center; gap:6px;"><i data-lucide="download"
+                                    style="width: 16px;"></i> Download</button>
+                            <button class="btn btn-secondary" onclick="shareAnswer()"
+                                style="display:inline-flex; align-items:center; gap:6px;"><i data-lucide="share-2"
+                                    style="width: 16px;"></i> Share</button>
+                        </div>
+                    </div>
+
+                    <div class="disclaimer">
+                        <p style="display:flex; align-items:flex-start; gap:8px;"><i data-lucide="alert-triangle"
+                                style="color: #f59e0b; flex-shrink: 0; margin-top: 2px;"></i>
+                            <span><strong>Disclaimer:</strong> This assistant provides general legal information only.
+                                It is
+                                not a substitute for professional legal advice from a qualified lawyer.</span>
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Explore Laws Section -->
+                <section id="laws-section" class="content-section">
+                    <div class="section-header">
+                        <p>Browse and understand important laws</p>
+                    </div>
+
+                    <div class="law-categories" id="lawCategories">
+                        <div class="law-card" onclick="getCategory('criminal')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="shield-alert"></i>
+                                Criminal Law</h3>
+                            <p>IPC, Criminal Procedure Code</p>
+                        </div>
+                        <div class="law-card" onclick="getCategory('civil')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="users"></i> Civil Law
+                            </h3>
+                            <p>Civil Procedure, Contract Law</p>
+                        </div>
+                        <div class="law-card" onclick="getCategory('family')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="home"></i> Family Law
+                            </h3>
+                            <p>Marriage, Inheritance, Custody</p>
+                        </div>
+                        <div class="law-card" onclick="getCategory('labour')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="briefcase"></i> Labour
+                                Law</h3>
+                            <p>Employee Rights, Wages</p>
+                        </div>
+                        <div class="law-card" onclick="getCategory('cyber')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="monitor"></i> Cyber Law
+                            </h3>
+                            <p>IT Act, Data Protection</p>
+                        </div>
+                        <div class="law-card" onclick="getCategory('consumer')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="shopping-cart"></i>
+                                Consumer Protection</h3>
+                            <p>Consumer Rights Act</p>
+                        </div>
+                    </div>
+
+                    <div id="lawViewer" style="display: none; animation: fadeIn 0.3s ease;">
+                        <button class="btn btn-secondary" onclick="showCategories()"
+                            style="margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;">
+                            <span>←</span> Back to Categories
+                        </button>
+                        <div id="lawsContent"></div>
+                    </div>
+                </section>
+
+                <!-- Document Generator Section -->
+                <section id="documents-section" class="content-section">
+                    <div class="section-header">
+                        <p>Create customized legal documents</p>
+                    </div>
+
+                    <div class="document-types" id="documentTypes">
+                        <div class="doc-card" onclick="selectDocumentType('legal_notice')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="file-warning"></i>
+                                Legal Notice</h3>
+                            <p>Send formal notice to concerned party</p>
+                        </div>
+                        <div class="doc-card" onclick="selectDocumentType('fir_draft')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="clipboard-list"></i>
+                                FIR Draft</h3>
+                            <p>First Information Report</p>
+                        </div>
+                        <div class="doc-card" onclick="selectDocumentType('rent_agreement')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="key"></i> Rent
+                                Agreement</h3>
+                            <p>Residential rent agreement</p>
+                        </div>
+                        <div class="doc-card" onclick="selectDocumentType('affidavit')">
+                            <h3 style="display:flex;align-items:center;gap:8px;"><i data-lucide="pen-tool"></i>
+                                Affidavit</h3>
+                            <p>Sworn statement</p>
+                        </div>
+                    </div>
+
+                    <div id="documentViewer" style="display: none; animation: fadeIn 0.3s ease;">
+                        <button class="btn btn-secondary" onclick="showDocumentTypes()"
+                            style="margin-bottom: 25px; display: inline-flex; align-items: center; gap: 8px;">
+                            <span>←</span> Back to Documents
+                        </button>
+                        <div id="documentForm"></div>
+                    </div>
+                </section>
+
+
+                <!-- Settings Section -->
+                <section id="settings-section" class="content-section">
+                    <div class="settings-group">
+                        <h3>Notification Settings</h3>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" checked> Email Notifications
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox"> SMS Alerts
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Language Preference</h3>
+                        <select>
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी (Hindi)</option>
+                            <option value="mr">मराठी (Marathi)</option>
+                        </select>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Privacy</h3>
+                        <button class="btn btn-secondary">Update Password</button>
+                        <button class="btn btn-danger">Delete Account</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+
+    <script>
+        // Local law data imported from user's file (embedded for offline use)
+        const localLaws = {
+            "criminal": [
+                {
+                    "title": "THEFT",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 378; BNS Section 303",
+                    "description": "Whoever dishonestly takes movable property out of another person’s possession without consent commits theft.\nPunishment: Imprisonment up to 3 years, or fine, or both.\nUser Guidance: Immediately file an FIR; provide proof of ownership; note time, place, and witnesses."
+                },
+                {
+                    "title": "ROBBERY",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 392; BNS Section 309",
+                    "description": "Robbery is theft or extortion committed by causing or threatening instant death, hurt, or wrongful restraint.\nPunishment: Rigorous imprisonment up to 10 years and fine.\nUser Guidance: Contact police (Dial 112); do not resist violently; remember attacker details for FIR."
+                },
+                {
+                    "title": "CHEATING / FRAUD",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 420; BNS Section 318",
+                    "description": "Cheating occurs when a person dishonestly deceives another to deliver property or money.\nPunishment: Imprisonment up to 7 years and fine.\nUser Guidance: Keep transaction records, messages, receipts; file FIR; report online scams to cyber crime portal."
+                },
+                {
+                    "title": "ASSAULT",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 351; BNS Section 130",
+                    "description": "Assault means threatening or attempting to use criminal force against a person.\nPunishment: Up to 3 months imprisonment, or fine, or both.\nUser Guidance: Report to police; seek medical report if injured; collect witness statements."
+                },
+                {
+                    "title": "HURT",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 319; BNS Section 115",
+                    "description": "Causing bodily pain, disease, or physical injury to any person.\nPunishment: Imprisonment up to 1 year, or fine, or both.\nUser Guidance: Get medical examination immediately; preserve medical records; file police complaint."
+                },
+                {
+                    "title": "GRIEVOUS HURT",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 320; BNS Section 117",
+                    "description": "Severe injuries such as fractures, permanent disability, or loss of senses.\nPunishment: Imprisonment up to 7 years and fine.\nUser Guidance: Immediate medical treatment; FIR recommended; legal assistance may be required."
+                },
+                {
+                    "title": "MURDER",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 302; BNS Section 103",
+                    "description": "Intentional killing of a person with intention or knowledge to cause death.\nPunishment: Death penalty or life imprisonment and fine.\nUser Guidance: Inform police immediately; do not disturb crime scene; cooperate with investigation."
+                },
+                {
+                    "title": "CULPABLE HOMICIDE (NOT MURDER)",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 299; BNS Section 101",
+                    "description": "Causing death without intention to murder, but with knowledge of likely death.\nPunishment: Up to 10 years or life imprisonment.\nUser Guidance: Legal interpretation is complex; court decides intent vs knowledge; professional legal help advised."
+                },
+                {
+                    "title": "RAPE",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 376; BNS Section 63",
+                    "description": "Sexual intercourse with a woman without consent or against her will.\nPunishment: Minimum 10 years imprisonment, may extend to life; death penalty in extreme cases.\nUser Guidance: Seek medical help immediately; FIR can be filed by victim or guardian; free legal aid available."
+                },
+                {
+                    "title": "CRIMINAL INTIMIDATION",
+                    "act": "IPC / BNS",
+                    "sections": "IPC Section 506; BNS Section 351",
+                    "description": "Threatening a person to cause fear of injury to body, property, or reputation.\nPunishment: Up to 2 years imprisonment, or fine, or both.\nUser Guidance: Preserve call records or messages; file police complaint; seek protection if threat is serious."
+                }
+            ],
+            "civil": [
+                {
+                    "title": "BREACH OF CONTRACT",
+                    "act": "Indian Contract Act, 1872",
+                    "sections": "Sections 73, 74",
+                    "description": "When one party fails to perform obligations under a valid contract.\nRemedy: Monetary compensation, specific performance, contract cancellation.\nUser Guidance: Preserve agreement, emails; send legal notice before filing; file suit for damages."
+                },
+                {
+                    "title": "RECOVERY OF MONEY",
+                    "act": "CPC",
+                    "sections": "Order 37 (Summary Suit)",
+                    "description": "Recovery of legally owed money through court.\nRemedy: Court decree, attachment of property, interest.\nUser Guidance: Maintain loan proof or invoices; file recovery suit; summary suit for faster disposal."
+                },
+                {
+                    "title": "PROPERTY OWNERSHIP DISPUTE",
+                    "act": "Transfer of Property Act, 1882",
+                    "sections": "Section 54, Section 5",
+                    "description": "Disputes related to ownership, sale, or transfer of property.\nRemedy: Declaration of ownership, possession, injunction.\nUser Guidance: Collect sale deed and land records; verify registration; approach civil court."
+                },
+                {
+                    "title": "PARTITION OF PROPERTY",
+                    "act": "Hindu Succession Act; Partition Act",
+                    "sections": "Hindu Succession Act Section 6; Partition Act, 1893",
+                    "description": "Division of joint family or inherited property among heirs.\nRemedy: Court-ordered division; sale and distribution of proceeds.\nUser Guidance: Gather family tree and documents; attempt settlement; file partition suit if needed."
+                },
+                {
+                    "title": "DECLARATION & INJUNCTION",
+                    "act": "Specific Relief Act, 1963",
+                    "sections": "Sections 34, 38",
+                    "description": "Declaration clarifies legal rights; injunction prevents illegal actions.\nRemedy: Court declaration, temporary or permanent injunction.\nUser Guidance: File suit before damage; temporary injunction prevents immediate harm."
+                },
+                {
+                    "title": "TORT (CIVIL WRONG)",
+                    "act": "Law of Torts",
+                    "sections": "(Judicial precedents)",
+                    "description": "Civil wrong causing harm or loss, such as negligence or defamation.\nRemedy: Compensation (damages), apology, injunction.\nUser Guidance: Prove duty, breach, damage; collect medical/financial proof."
+                },
+                {
+                    "title": "DEFAMATION (CIVIL)",
+                    "act": "Law of Torts",
+                    "sections": "Civil defamation principles",
+                    "description": "False statements harming reputation.\nRemedy: Monetary compensation, apology, injunction.\nUser Guidance: Preserve defamatory content; file civil suit for damages."
+                },
+                {
+                    "title": "CONSUMER DISPUTE",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "(As per Act)",
+                    "description": "Protects consumers against defective goods and deficient services.\nRemedy: Refund, replacement, compensation.\nUser Guidance: File complaint online (e-Daakhil); attach bills and warranty."
+                },
+                {
+                    "title": "SPECIFIC PERFORMANCE",
+                    "act": "Specific Relief Act, 1963",
+                    "sections": "Section 10",
+                    "description": "Court orders a party to perform contractual obligations instead of paying damages.\nRemedy: Enforcement of contract; injunction.\nUser Guidance: Useful in property agreements; court checks fairness."
+                },
+                {
+                    "title": "MAINTENANCE (CIVIL NATURE)",
+                    "act": "Hindu Marriage Act; CrPC",
+                    "sections": "Hindu Marriage Act Sections 24 & 25; Section 125 CrPC",
+                    "description": "Financial support to spouse or dependents.\nRemedy: Monthly maintenance, interim and permanent orders.\nUser Guidance: Income proof required; file petition in family court."
+                }
+            ],
+            "family": [
+                {
+                    "title": "MARRIAGE (HINDU LAW)",
+                    "act": "Hindu Marriage Act, 1955",
+                    "sections": "Section 5",
+                    "description": "Valid Hindu marriage requires consent, legal age, and absence of prohibited relationships.\nRemedy: Invalid marriage may be declared void; legal separation or divorce.\nUser Guidance: Ensure legal age; register marriage."
+                },
+                {
+                    "title": "DIVORCE",
+                    "act": "Hindu Marriage Act, 1955",
+                    "sections": "Section 13",
+                    "description": "Legal dissolution of marriage due to cruelty, adultery, desertion, or mutual consent.\nRemedy: Court decree dissolving marriage.\nUser Guidance: Mutual consent divorce is faster; counseling often mandatory."
+                },
+                {
+                    "title": "MAINTENANCE (SPOUSE)",
+                    "act": "Hindu Marriage Act; CrPC",
+                    "sections": "Sections 24 & 25; Section 125",
+                    "description": "Financial support to spouse who cannot maintain themselves.\nRemedy: Monthly or lump-sum maintenance.\nUser Guidance: Income proof required; both spouses can claim."
+                },
+                {
+                    "title": "CHILD CUSTODY",
+                    "act": "Guardians and Wards Act, 1890",
+                    "sections": "(As per Act)",
+                    "description": "Determines who will take care of the child after separation or divorce.\nRemedy: Custody awarded based on child’s welfare.\nUser Guidance: Child’s interest is primary; joint custody possible."
+                },
+                {
+                    "title": "ADOPTION",
+                    "act": "Hindu Adoption and Maintenance Act, 1956",
+                    "sections": "(As per Act)",
+                    "description": "Legal process of adopting a child and treating them as a biological child.\nRemedy: Adopted child gets inheritance rights.\nUser Guidance: Follow legal adoption process; register adoption deed."
+                },
+                {
+                    "title": "DOMESTIC VIOLENCE",
+                    "act": "Protection of Women from Domestic Violence Act, 2005",
+                    "sections": "(As per Act)",
+                    "description": "Protects women from physical, emotional, sexual, or economic abuse.\nRemedy: Protection order, residence order, monetary relief.\nUser Guidance: Complaint can be filed without FIR; free legal aid available."
+                },
+                {
+                    "title": "DOWRY PROHIBITION",
+                    "act": "Dowry Prohibition Act, 1961",
+                    "sections": "(As per Act)",
+                    "description": "Giving or receiving dowry is a criminal offence.\nPunishment: Imprisonment up to 5 years and fine.\nUser Guidance: Report dowry demand immediately; preserve evidence."
+                },
+                {
+                    "title": "MAINTENANCE OF PARENTS",
+                    "act": "Maintenance and Welfare of Parents and Senior Citizens Act, 2007",
+                    "sections": "(As per Act)",
+                    "description": "Children are legally bound to maintain elderly parents.\nRemedy: Monthly maintenance; property protection.\nUser Guidance: Parents can file complaint; fast-track tribunal process."
+                },
+                {
+                    "title": "INHERITANCE & SUCCESSION",
+                    "act": "Hindu Succession Act, 1956",
+                    "sections": "(As per Act)",
+                    "description": "Governs inheritance of ancestral and self-acquired property.\nRemedy: Equal rights to sons and daughters.\nUser Guidance: Daughters have equal rights; will overrides normal succession."
+                },
+                {
+                    "title": "MUSLIM PERSONAL LAW (OVERVIEW)",
+                    "act": "Muslim Personal Law",
+                    "sections": "(As per Act)",
+                    "description": "Covers marriage, divorce, maintenance, and inheritance for Muslims.\nRemedy: Civil remedies via family court.\nUser Guidance: Triple Talaq is illegal; family court jurisdiction applies."
+                }
+            ],
+            "labour": [
+                {
+                    "title": "MINIMUM WAGES",
+                    "act": "Minimum Wages Act, 1948",
+                    "sections": "(As per Act)",
+                    "description": "Employers must pay at least the minimum wage fixed by government.\nPunishment: Fine up to ₹10,000; imprisonment up to 6 months.\nUser Guidance: Check state-wise rates; keep salary slips; complain to labour officer."
+                },
+                {
+                    "title": "WORKING HOURS & OVERTIME",
+                    "act": "Factories Act, 1948",
+                    "sections": "Sections 51, 59",
+                    "description": "Limits working hours to 48 hours/week and mandates overtime pay.\nUser Guidance: Overtime paid at double rate; maintain attendance records."
+                },
+                {
+                    "title": "WAGES PAYMENT",
+                    "act": "Payment of Wages Act, 1936",
+                    "sections": "(As per Act)",
+                    "description": "Ensures timely payment of wages without illegal deductions.\nPunishment: Fine and compensation.\nUser Guidance: Salary delays illegal; file complaint within limitation."
+                },
+                {
+                    "title": "EMPLOYEE PROVIDENT FUND (EPF)",
+                    "act": "Employees' Provident Funds Act, 1952",
+                    "sections": "(As per Act)",
+                    "description": "Provides retirement savings through contributions.\nUser Guidance: Check EPF balance online; non-deposit is an offence."
+                },
+                {
+                    "title": "EMPLOYEE STATE INSURANCE (ESI)",
+                    "act": "ESI Act, 1948",
+                    "sections": "(As per Act)",
+                    "description": "Provides medical, sickness, and maternity benefits.\nUser Guidance: Employer must register; file complaint for denial."
+                },
+                {
+                    "title": "MATERNITY BENEFIT",
+                    "act": "Maternity Benefit Act, 1961",
+                    "sections": "(As per Act)",
+                    "description": "Paid maternity leave and job protection for women.\nPunishment: Imprisonment up to 3 months and fine.\nUser Guidance: Paid leave up to 26 weeks; employer cannot terminate."
+                },
+                {
+                    "title": "TERMINATION & RETRENCHMENT",
+                    "act": "Industrial Disputes Act, 1947",
+                    "sections": "(As per Act)",
+                    "description": "Regulates layoff, retrenchment, and termination.\nRemedy: Reinstatement and compensation.\nUser Guidance: Notice period mandatory; labour court resolution available."
+                },
+                {
+                    "title": "BONUS PAYMENT",
+                    "act": "Payment of Bonus Act, 1965",
+                    "sections": "(As per Act)",
+                    "description": "Provides annual bonus based on profits or productivity.\nUser Guidance: Bonus ranges from 8.33% to 20%; maintain records."
+                },
+                {
+                    "title": "WORKPLACE SAFETY",
+                    "act": "Factories Act, 1948",
+                    "sections": "(As per Act)",
+                    "description": "Ensures safe working conditions and accident prevention.\nUser Guidance: Report unsafe conditions; safety training mandatory."
+                },
+                {
+                    "title": "SEXUAL HARASSMENT AT WORKPLACE",
+                    "act": "POSH Act, 2013",
+                    "sections": "(As per Act)",
+                    "description": "Prevents sexual harassment and ensures safe work environment.\nUser Guidance: ICC mandatory; complaint within 3 months."
+                }
+            ],
+            "cyber": [
+                {
+                    "title": "UNAUTHORIZED ACCESS / HACKING",
+                    "act": "IT Act, 2000",
+                    "sections": "Sections 43, 66",
+                    "description": "Accessing computer systems without permission and causing damage.\nPunishment: Compensation and imprisonment; fines.\nUser Guidance: Change passwords; preserve logs; file complaint on cyber crime portal."
+                },
+                {
+                    "title": "IDENTITY THEFT",
+                    "act": "IT Act",
+                    "sections": "Section 66C",
+                    "description": "Fraudulent use of another’s electronic signature, password, or data.\nPunishment: Imprisonment up to 3 years and fine.\nUser Guidance: Block compromised accounts; inform bank and service providers."
+                },
+                {
+                    "title": "ONLINE FRAUD / CHEATING",
+                    "act": "IT Act / IPC",
+                    "sections": "Section 66D; IPC 420",
+                    "description": "Cheating by personation using electronic communication.\nUser Guidance: Keep transaction records; report to cyber cell."
+                },
+                {
+                    "title": "CYBER STALKING",
+                    "act": "IPC / IT Act",
+                    "sections": "IPC Section 354D",
+                    "description": "Monitoring or contacting a person repeatedly online against their will.\nPunishment: Imprisonment up to 3 years (first offence).\nUser Guidance: Block and report; preserve messages."
+                },
+                {
+                    "title": "CYBER BULLYING",
+                    "act": "IPC / IT Act",
+                    "sections": "IPC 499,500; IT Act Section 67",
+                    "description": "Harassment or humiliation using online platforms.\nUser Guidance: Save evidence; report to platform and police."
+                },
+                {
+                    "title": "PUBLISHING OBSCENE CONTENT",
+                    "act": "IT Act",
+                    "sections": "Section 67",
+                    "description": "Publishing obscene content electronically.\nPunishment: Imprisonment and fine.\nUser Guidance: Report immediately; avoid sharing."
+                },
+                {
+                    "title": "CHILD PORNOGRAPHY",
+                    "act": "IT Act",
+                    "sections": "Section 67B",
+                    "description": "Publishing sexually explicit content involving children.\nPunishment: Imprisonment and heavy fines.\nUser Guidance: Report anonymously if needed; do not download or forward."
+                },
+                {
+                    "title": "DATA BREACH & PRIVACY VIOLATION",
+                    "act": "IT Act",
+                    "sections": "Section 43A",
+                    "description": "Failure of organisations to protect sensitive personal data.\nUser Guidance: File complaint against company; change compromised credentials."
+                },
+                {
+                    "title": "EMAIL SPOOFING & PHISHING",
+                    "act": "IT Act / IPC",
+                    "sections": "Section 66D; IPC 468",
+                    "description": "Sending fake emails/messages to steal information or money.\nUser Guidance: Verify sender; never click suspicious links."
+                },
+                {
+                    "title": "ONLINE DEFAMATION",
+                    "act": "IPC",
+                    "sections": "Section 499",
+                    "description": "Publishing false statements online that harm reputation.\nUser Guidance: Preserve offensive content; civil and criminal remedies available."
+                }
+            ],
+            "consumer": [
+                {
+                    "title": "DEFECTIVE GOODS",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Section 2(10)",
+                    "description": "Goods having defects in quality, quantity, purity, or standard.\nRemedy: Repair, replacement, refund, compensation.\nUser Guidance: Preserve bill, warranty; file complaint within limitation."
+                },
+                {
+                    "title": "DEFICIENCY IN SERVICE",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Section 2(11)",
+                    "description": "Fault, imperfection, or inadequacy in service quality.\nRemedy: Refund, compensation.\nUser Guidance: Collect service agreements and receipts; file via e-Daakhil."
+                },
+                {
+                    "title": "UNFAIR TRADE PRACTICE",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Section 2(47)",
+                    "description": "Misleading advertisements, false claims, or deceptive practices.\nUser Guidance: Save advertisement evidence; report misleading ads."
+                },
+                {
+                    "title": "PRODUCT LIABILITY",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Sections 82–87",
+                    "description": "Manufacturers/sellers liable for harm caused by defective products.\nRemedy: Compensation to consumer.\nUser Guidance: Medical proof required; manufacturer can be sued."
+                },
+                {
+                    "title": "MISLEADING ADVERTISEMENTS",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Section 21",
+                    "description": "Advertisements that falsely describe products or services.\nPunishment: Fine up to ₹10 lakh; repeat offence higher.\nUser Guidance: File complaint to CCPA; screenshot ads."
+                },
+                {
+                    "title": "E-COMMERCE CONSUMER RIGHTS",
+                    "act": "E-Commerce Rules, 2020",
+                    "sections": "(As per Rules)",
+                    "description": "Protects consumers in online shopping and digital services.\nRemedy: Refunds and compensation.\nUser Guidance: Check seller details; use grievance officer."
+                },
+                {
+                    "title": "OVERCHARGING / PRICE HIKE",
+                    "act": "Legal Metrology Act / Consumer Protection Act",
+                    "sections": "(As per Act)",
+                    "description": "Charging more than MRP or unfair price manipulation.\nRemedy: Fine and refund.\nUser Guidance: Keep bill showing overcharge; report shopkeeper."
+                },
+                {
+                    "title": "RIGHT TO CONSUMER INFORMATION",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Section 2(9)",
+                    "description": "Consumers have the right to complete product information.\nUser Guidance: Read labels carefully; report missing details."
+                },
+                {
+                    "title": "CONSUMER DISPUTE REDRESSAL COMMISSIONS",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Sections 34, 47, 58",
+                    "description": "Three-tier system: District, State, National Commissions.\nRemedy: Refund, compensation, replacement.\nUser Guidance: Choose commission based on claim value; online filing available."
+                },
+                {
+                    "title": "MEDIATION IN CONSUMER DISPUTES",
+                    "act": "Consumer Protection Act, 2019",
+                    "sections": "Section 37",
+                    "description": "Voluntary settlement through mediation.\nRemedy: Mutually agreed settlement; legally binding.\nUser Guidance: Faster and less expensive; confidential."
+                }
+            ]
+        };
+
+        // Override getCategory to use local data first
+        function getCategory(category) {
+            if (localLaws[category]) {
+                displayLaws(localLaws[category], category);
+                return;
+            }
+
+            // Fallback to original API call if category not found locally
+            fetch(`/api/legal/laws/${category}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) displayLaws(data.laws, category);
+                })
+                .catch(err => console.error('Error fetching laws:', err));
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,151 @@
+{
+  "legal_faq": {
+    "criminal_law": [
+      {
+        "question": "What is the punishment for theft in India?",
+        "answer": "Theft is punishable with imprisonment up to 3 years, or fine, or both.",
+        "source_ids": [2, 3]
+      },
+      {
+        "question": "What section applies for cheating and fraud?",
+        "answer": "Cheating is covered under IPC Section 420 (now BNS Section 318).",
+        "source_ids": [4, 5]
+      },
+      {
+        "question": "Is FIR mandatory for all crimes?",
+        "answer": "FIR is mandatory for cognizable offences like murder, theft, rape. For non-cognizable offences, court permission is needed.",
+        "source_ids": [6, 7, 8]
+      },
+      {
+        "question": "What is the difference between murder and culpable homicide?",
+        "answer": "Murder is intentional killing, while culpable homicide is death caused without clear intention to kill.",
+        "source_ids": [9, 10]
+      },
+      {
+        "question": "Can police arrest without a warrant?",
+        "answer": "Yes, police can arrest without warrant in cognizable offences.",
+        "source_ids": [11, 12]
+      },
+      {
+        "question": "What is a cognizable offence?",
+        "answer": "A serious offence where police can arrest without warrant and start investigation.",
+        "source_ids": [13, 14]
+      },
+      {
+        "question": "What is a non-cognizable offence?",
+        "answer": "A minor offence where police need court permission to investigate.",
+        "source_ids": [15, 16]
+      },
+      {
+        "question": "What is the punishment for robbery?",
+        "answer": "Rigorous imprisonment up to 10 years and fine.",
+        "source_ids": [17, 18]
+      },
+      {
+        "question": "What happens after filing an FIR?",
+        "answer": "Police start investigation, collect evidence, and may arrest the accused.",
+        "source_ids": [19, 20]
+      },
+      {
+        "question": "What is anticipatory bail?",
+        "answer": "Advance bail granted to a person before arrest.",
+        "source_ids": [21, 22]
+      }
+    ],
+    "civil_law": [
+      {
+        "question": "What is civil law in India?",
+        "answer": "Civil law deals with private disputes between people or organizations about property, money, contracts, family matters, and rights. It focuses on compensation, not punishment.",
+        "source_ids": [87, 88, 89]
+      },
+      {
+        "question": "How to file a civil case?",
+        "answer": "Prepare a plaint, attach documents, pay court fees, file in proper court, and the court issues a notice.",
+        "source_ids": [90, 91, 92, 93, 94, 95]
+      },
+      {
+        "question": "What is breach of contract?",
+        "answer": "When one party fails to perform the terms of a legally valid agreement.",
+        "source_ids": [96, 97]
+      },
+      {
+        "question": "What is an injunction in civil law?",
+        "answer": "A court order that stops someone from doing a particular act.",
+        "source_ids": [105, 106]
+      },
+      {
+        "question": "What is the limitation period in civil cases?",
+        "answer": "The maximum time within which a case must be filed (e.g., 3 years for money recovery).",
+        "source_ids": [115, 116]
+      }
+    ],
+    "family_law": [
+      {
+        "question": "What are grounds for divorce in India?",
+        "answer": "Cruelty, Adultery, Desertion, Mental disorder, Conversion of religion, and Mutual consent.",
+        "source_ids": [183, 184, 185, 186, 187, 188, 189]
+      },
+      {
+        "question": "Can working wife claim maintenance?",
+        "answer": "Yes, if her income is insufficient for living.",
+        "source_ids": [219, 220]
+      },
+      {
+        "question": "Do daughters have equal property rights?",
+        "answer": "Yes, daughters have equal rights in ancestral property.",
+        "source_ids": [233, 234]
+      },
+      {
+        "question": "Is live-in relationship legal in India?",
+        "answer": "Yes, it is legal and protected by law.",
+        "source_ids": [262, 263]
+      }
+    ],
+    "labour_law": [
+      {
+        "question": "What are legal working hours?",
+        "answer": "Generally 8 hours per day and 48 hours per week.",
+        "source_ids": [273, 274]
+      },
+      {
+        "question": "What is the maternity leave law?",
+        "answer": "Female employees are entitled to 26 weeks paid maternity leave.",
+        "source_ids": [281, 282]
+      },
+      {
+        "question": "What is the POSH Act?",
+        "answer": "Prevention of Sexual Harassment Act, 2013 - ensures a safe workplace for women.",
+        "source_ids": [301, 302]
+      }
+    ],
+    "cyber_law": [
+      {
+        "question": "What is the IT Act?",
+        "answer": "Information Technology Act, 2000 - the main law governing cyber crimes in India.",
+        "source_ids": [365, 366]
+      },
+      {
+        "question": "How to report cyber crime?",
+        "answer": "Report online at cybercrime.gov.in or at the nearest police station.",
+        "source_ids": [342, 343]
+      },
+      {
+        "question": "Is a screenshot valid evidence?",
+        "answer": "Yes, if properly verified and submitted.",
+        "source_ids": [379, 380]
+      }
+    ],
+    "consumer_law": [
+      {
+        "question": "What is the e-Daakhil portal?",
+        "answer": "An online government portal to file consumer complaints digitally.",
+        "source_ids": [408, 409]
+      },
+      {
+        "question": "Is a lawyer required for a consumer case?",
+        "answer": "No. Consumers can represent themselves.",
+        "source_ids": [426, 427]
+      }
+    ]
+  }
+}
